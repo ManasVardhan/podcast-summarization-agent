@@ -1,0 +1,17 @@
+# Render Blueprint
+# https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: friday-podcast-summariser
+    runtime: python
+    plan: free  # or starter for always-on
+    buildCommand: pip install -r deploy/requirements.txt
+    startCommand: uvicorn deploy.app:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: OPENROUTER_API_KEY
+        sync: false  # Set manually in Render dashboard
+      - key: PYTHON_VERSION
+        value: "3.11"
+    healthCheckPath: /health
+    autoDeploy: true

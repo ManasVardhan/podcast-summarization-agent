@@ -1,0 +1,33 @@
+{
+  "name": "Podcast Summariser",
+  "id": "podcast_summariser",
+  "icon": "podcast",
+  "version": "1.0.0",
+  "description": "Summarise a podcast from YouTube URL into key topics, takeaways, and insights",
+  "author": "Friday",
+  "credentials": null,
+  "entry": "agent.py",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "url": {
+        "type": "string",
+        "description": "The YouTube URL of the podcast to summarise"
+      }
+    },
+    "required": ["url"]
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "summary": {
+        "type": "string",
+        "description": "The structured summary of the podcast"
+      }
+    }
+  },
+  "triggers": {
+    "keywords": ["podcast", "youtube", "video", "summarize", "summarise", "episode"],
+    "url_patterns": ["youtube.com", "youtu.be"]
+  }
+}
