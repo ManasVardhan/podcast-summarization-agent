@@ -25,7 +25,7 @@ class PodcastSummariser:
             base_url="https://openrouter.ai/api/v1",
             api_key=self.api_key,
         )
-        self.model = "openai/gpt-5.1-mini"
+        self.model = "openai/gpt-4o-mini"
 
     def run(self, podcast_url: str) -> str:
         """
@@ -87,8 +87,11 @@ class PodcastSummariser:
     def _get_transcript(self, video_id: str) -> str | None:
         """Fetch transcript using youtube-transcript-api."""
         try:
+            # Create API instance (new API style)
+            api = YouTubeTranscriptApi()
+
             # Try to get transcript, preferring manual captions over auto-generated
-            transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
+            transcript_list = api.list(video_id)
 
             # Try manual transcripts first (usually higher quality)
             try:
@@ -103,15 +106,16 @@ class PodcastSummariser:
 
             # Fetch and combine transcript text
             transcript_data = transcript.fetch()
-            text_parts = [entry['text'] for entry in transcript_data]
+            text_parts = [entry.text for entry in transcript_data]
             return ' '.join(text_parts)
 
         except Exception as e:
             print(f"Error fetching transcript: {e}")
             # Fallback: try direct fetch without language preference
             try:
-                transcript_data = YouTubeTranscriptApi.get_transcript(video_id)
-                text_parts = [entry['text'] for entry in transcript_data]
+                api = YouTubeTranscriptApi()
+                transcript_data = api.fetch(video_id)
+                text_parts = [entry.text for entry in transcript_data]
                 return ' '.join(text_parts)
             except Exception as e2:
                 print(f"Fallback also failed: {e2}")
